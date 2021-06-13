@@ -28,3 +28,4 @@ is built in a layered fashion. There is repository layer, then above it is the c
 
 **Class design:**
 
+![image](https://user-images.githubusercontent.com/60185211/121811306-6d337800-cc7d-11eb-9a42-f675639b1598.png)
