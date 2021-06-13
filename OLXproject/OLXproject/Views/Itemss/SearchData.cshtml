@@ -1,0 +1,35 @@
+﻿@model IEnumerable<Models.Item>
+
+<table class="table">
+    <tbody>
+        @foreach (var Item in Model)
+        {
+            <tr>
+                <td>@Item.itemID</td>
+                <td>@Item.name</td>
+                <td>@Item.price</td>
+                <td>@Item.description</td>
+                <td>@Item.Category.name</td>
+                @if (@Item.quantity > 0)
+                {
+                    <td>@Item.quantity</td>
+                }
+                else
+                {
+                    <td class="text-danger"><b>Item Out Of Stock!</b></td>
+                }
+                <td><img src="@Url.Content(Item.imgPath)" height="80" width="80" /></td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = Item.itemID }, new { @class = "btn btn-info" })
+                    @Html.ActionLink("Details", "Details", new { id = Item.itemID }, new { @class = "btn btn-info" })
+                    @Html.ActionLink("Delete", "Delete", new { id = Item.itemID }, new { @class = "btn btn-danger" })
+                    <br /><br />
+                    @Html.ActionLink("Add to Compare", "ComparingProducts", new { id = Item.itemID }, new { @class = "btn btn-primary" })
+
+                </td>
+            </tr>
+        }
+
+    </tbody>
+
+</table>

@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Models.Models.SecondHandItems>
+
+@{
+    ViewBag.Title = "Index";
+    if (Request.IsAuthenticated && User.IsInRole("Admin"))
+    {
+        Layout = "~/Views/Shared/adminLayout.cshtml";
+    }
+    else if (Request.IsAuthenticated)
+    {
+        Layout = "~/Views/Shared/_ItemLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}
+
+<h2>Browse Items</h2>
+<div class="container">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-sm-10 col-lg-6 col-md-5">
+                <div class="card" style="width: 30rem;  margin: 20px">
+                    <img src="@Url.Content(item.imgPath)" class="card-img-top" width="350px" height="280px" alt="#">
+                    <div class="card-body" style="height: 300px ;">
+                        <h3 class="card-title">@Html.DisplayFor(model => item.name)</h3>
+                        <h4 class="card-text">@Html.DisplayFor(modelItem => item.price)</h4>
+                        <p class="card-text">@Html.DisplayFor(modelItem => item.description)</p>
+                        <p class="card-text">@Html.DisplayFor(modelItem => item.Condition)</p>
+                        <p class="card-text">@Html.DisplayFor(modelItem => item.ReasonForSelling)</p>
+                        <p class="card-text">@Html.DisplayFor(modelItem => item.location)</p>
+                        @*<a href="#" class="btn btn-primary">Go somewhere</a>*@
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+

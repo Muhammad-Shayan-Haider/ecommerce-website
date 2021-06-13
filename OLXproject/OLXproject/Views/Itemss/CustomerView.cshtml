@@ -1,0 +1,93 @@
+﻿
+@{
+    ViewBag.Title = "CustomerView";
+    Layout = "~/Views/Shared/_ItemLayout.cshtml";
+}
+
+<h2>Products</h2>
+
+<div class="container">
+    <div class="form-group">
+        <input class="form-control" type="text" placeholder="Search" aria-label="Search" id="Search">
+    </div>
+    <div class="form-group">
+        <label for="SearchBy">Select list (select one):</label>
+        <select class="form-control" id="SearchBy" name="SearchBy">
+            <option value="Name"> Name</option>
+            <option value="ID">ID</option>
+            <option value="Category">Category</option>
+        </select>
+    </div>
+
+    <br />
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Quantity</th>
+                <th>Image</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody id="DataSearching">
+            @foreach (var Item in Model)
+            {
+                <tr>
+                    <td>@Item.itemID</td>
+                    <td>@Item.name</td>
+                    <td>@Item.price</td>
+                    <td>@Item.description</td>
+                    <td>@Item.Category.name</td>
+                    @if (@Item.quantity > 0)
+                    {
+                        <td>@Item.quantity</td>
+                    }
+                    else
+                    {
+                        <td class="text-danger"><b>Item Out Of Stock!</b></td>
+                    }
+                    <td><img src="@Url.Content(Item.imgPath)" height="80" width="80" /></td>
+                    <td>
+                        @Html.ActionLink("Details", "Details", new { id = Item.itemID }, new { @class = "btn btn-info" })
+                        <br /><br />
+                        @Html.ActionLink("Add to Compare", "ComparingProducts", new { id = Item.itemID }, new { @class = "btn btn-primary" })
+
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+
+</div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#Search").keyup(function () {
+            var SearchBy = $("#SearchBy").val();
+            var SearchValue = $("#Search").val();
+            var SetData = $("#DataSearching");
+            SetData.html("");
+            $.ajax({
+                type: "post",
+                url: "/Itemss/GetSearchingData1?SearchBy=" + SearchBy + "&SearchValue=" + SearchValue,
+                contentType: "html",
+                success: function (result) {
+                    if (result.length == 0) {
+                        SetData.append('<tr style="color:red"><td colspan="3">No Match Data</td></tr>')
+                    }
+                    else {
+                        SetData.html(result);
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+

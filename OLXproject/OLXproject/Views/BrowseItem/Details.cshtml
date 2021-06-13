@@ -1,0 +1,165 @@
+﻿@model Models.ViewModels.ItemUserReviewViewModel
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_ItemLayout.cshtml";
+}
+<div class="container">
+    <br />
+    <div class="row">
+        <div class="col-md-4 col-sm-3">
+            <img class="card-img-top" style="height: 250px; width: 100%; display: block;" src="@Url.Content(Model.item.imgPath)" alt="Card image">
+
+            <h3 id=@Model.item.itemID class="card-header">@Model.item.name</h3>
+            <div class="card-body">
+                <div class="text-muted"><h5 class="card-title">@Model.item.Category.name</h5></div>
+            </div>
+            <div class="card-title">
+                <h5>Description: </h5><p class="card-text">@Model.item.description</p>
+            </div>
+        </div>
+        <div class="rateit" data-rateit-mode="font">
+        </div>
+
+        <button id="wishlist" style="height:40px !important" class="btn btn-primary" onclick="return addtoWishList()">Add to Wishlist</button>
+        @Html.ActionLink("Add to Cart", "AddtoCart", new { id = @Model.item.itemID }, new { @class = "btn btn-warning", @style = "height:40px !important" })
+    </div>
+    <br />
+
+</div>
+<div class="container">
+    &nbsp;&nbsp;
+    <h4>Trending: </h4>
+    @foreach (var trendingItem in Model.trendings)
+    {
+        var id = "itemname" + trendingItem.itemId;
+        var link = "../../BrowseItem/Details/" + trendingItem.itemId;
+        <div class="col-sm-10 col-lg-4 col-md-5">
+            <div class="card" style="width: 18rem;">
+                <img src="@Url.Content(trendingItem.imgPath)" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">@trendingItem.name</h5>
+                    <p class="card-text">@trendingItem.price</p>
+                    <a href=@link class="btn btn-primary">Go to details</a>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
+<div class="container">
+    <hr />
+    <h4 class="label-info">Comments: </h4>
+    <div class="form-group">
+        <div class="row">
+            <input class="form-control" id="comment" type="text" name="comment" value="" />
+            &nbsp;
+            <input class="btn btn-primary" type="submit" name="Add review" onclick="return postComment()" id="button" value="Add review" />
+
+        </div>
+    </div>
+    <div class="card" id="box1"></div>
+
+
+
+</div>
+
+<script>
+    function getComments() {
+
+        $.ajax({
+            method: "GET",
+            url: "/BrowseItem/getComments/",
+            data: { itemId: @Model.item.itemID },
+            success: function (data) {
+                $("#box1").empty();
+                for (var i = 0; i < data.length; i++)
+                {
+                    var main = $("#box1");
+                    $(main).append('<div class = "card-header">' + data[i].ApplicationUser.UserName + '</div>');
+                    $(main).append('<div class="card-body card-text">' + data[i].text + '</div>');
+                }
+                getAvgRating();
+            }
+        })
+    }
+    $(document).ready(
+        getComments(),
+        getAvgRating()
+    );
+
+    function postComment() {
+        var review = $("#comment").val();
+        $.ajax({
+            method: "POST",
+            url: "/BrowseItem/addComment/",
+            data: { comment: review, itemId: @Model.item.itemID }
+        }).done(function (msg)
+        {
+            if (msg == 1)
+            {
+                getComments();
+            }
+            else
+            {
+                alert("Error!!");
+            }
+
+        });
+    }
+
+
+    $('.rateit').bind('rated reset', function (e) {
+         var rate = $(this);
+         var value = rate.rateit('value');
+
+         rate.rateit('readonly', false);
+
+         $.ajax({
+             url: '/BrowseItem/addRating/',
+             data: { id: @Model.item.itemID, value: value },
+             type: 'POST',
+             success: function (data) {
+                 getAvgRating();
+             },
+             error: function (message) {
+                 alert(message);
+             }
+         });
+    });
+
+    function addtoWishList()
+    {
+
+        $.ajax({
+             url: '/BrowseItem/addtoWishList/',
+             data: { id: @Model.item.itemID },
+             type: 'POST',
+             success: function (data) {
+
+                 if (data == @Model.item.itemID) {
+                     $("#wishlist").hide();
+                 }
+                alert("Added to your wishlist!!");
+
+             },
+             error: function (message) {
+
+             }
+         });
+    }
+    function getAvgRating() {
+        $.ajax({
+            method: "GET",
+            url: "/BrowseItem/getAverageRating/",
+            data: { itemId: @Model.item.itemID },
+            success: function (data) {
+                $('.rateit').rateit('value', data);
+
+            },
+            error: function () {
+                alert('Error');
+            }
+        });
+    }
+</script>
+

@@ -1,0 +1,73 @@
+﻿@model IEnumerable<Models.OrderDetail>
+
+@{
+    ViewBag.Title = "CheckCart";
+    Layout = "~/Views/Shared/_ItemLayout.cshtml";
+}
+
+<h2>CheckCart</h2>
+
+@*<a href='@Url.Action("Back to Browse", "Index", "Item")' class="btn btn-primary" style="float: right; margin: 3px; position: fixed; bottom: 50px; right: 100px; ">Check Cart</a>*@
+
+<div style="float: right; margin: 3px; position: fixed; top: 50px; right: 100px;">
+    <p>Total : @TempData["Bill"]</p>
+</div>
+
+@*<div class="col-md-10">
+        @Html.DropDownList("cIdd", null, htmlAttributes: new { @class = "form-control" })
+    </div>*@
+@if (Model.Count() > 0)
+{
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Item.name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Item.price)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.quantity)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Item.name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Item.price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.quantity)
+            </td>
+
+            <td>
+                @if (item.quantity < 10)
+                {
+                    @Html.ActionLink("+", "IncreaseQuantity", new { id = item.Item.itemID }, new { @class = "btn btn-primary" })
+                }
+                &nbsp; &nbsp; @Html.ActionLink("Delete", "DeleteItem", new { id = item.Item.itemID }, new { @class = "btn btn-warning" })
+                &nbsp; &nbsp;
+                @if (item.quantity > 1)
+                {
+                    @Html.ActionLink("-", "DecreaseQuantity", new { id = item.Item.itemID }, new { @class = "btn btn-danger" })
+                }
+            </td>
+
+        </tr>
+    }
+    @Html.ActionLink("Checkout", "ConfirmOrder", new { @class = "btn btn-primary" })
+
+</table>
+}
+else
+{
+    <h1>Your Cart is Currently Empty!</h1>
+}
+
+
+

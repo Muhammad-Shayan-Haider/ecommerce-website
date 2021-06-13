@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/rateit")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/rateit")
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-warning navbar fixed-top">
+        <a class="navbar-brand" href='@Url.Action("HomeIndex", "BrowseItem")'>Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarColor01">
+            <ul class="navbar-nav mr-auto">
+
+                <li class="nav-item">
+                    <a class="nav-link" href='@Url.Action("Categories", "BrowseItem")'>Categories</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href='@Url.Action("wishList", "BrowseItem")'>Wish List</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href='@Url.Action("ViewCompareProducts", "Itemss")'>Compare</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href='@Url.Action("SecondHandSection", "SecondHandItems")'>Second Hand Items</a>
+                </li>
+            </ul>
+            @Html.Partial("_LoginPartial")
+        </div>
+    </nav>
+
+    <div class="body-content">
+        @RenderBody()
+    </div>
+
+
+
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

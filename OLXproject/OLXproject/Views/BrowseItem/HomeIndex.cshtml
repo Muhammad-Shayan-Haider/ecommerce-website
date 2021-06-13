@@ -1,0 +1,121 @@
+﻿@using PagedList.Mvc;
+@using PagedList;
+@using Microsoft.AspNet.Identity
+
+@model PagedList<Models.Item>
+@{
+    if (Request.IsAuthenticated && User.IsInRole("Admin"))
+    {
+        Layout = "~/Views/Shared/adminLayout.cshtml";
+    }
+    else if(Request.IsAuthenticated)
+    {
+        Layout = "~/Views/Shared/_ItemLayout.cshtml";
+    } else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}
+
+@if (Session["Order"] != null)
+{
+    <a href='@Url.Action("CheckCart","Order")' class="btn btn-primary" style="float: right; margin: 3px; position: fixed; bottom: 50px; right: 100px; ">Check Cart</a>
+}
+@using (Html.BeginForm("HomeIndex", "BrowseItem", FormMethod.Get))
+{
+    //the following are search options
+    <br />
+
+    <div class="container text-center">
+        <div class="row">
+            @Html.TextBox("search", null, new { @class = "form-control mr-sm-2" })
+
+            <input type="submit" class="btn btn-secondary my-2 my-sm-0" name="submit" value="Search" />
+            &nbsp;
+            @Html.DropDownList("Category", new SelectList(ViewBag.Categories), "Select category", new { @class = "btn btn-primary" })
+        </div>
+    </div>
+    <div>@ViewBag.Message</div>
+}
+
+<div class="container">
+    <hr />
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            var id = "itemname" + item.itemID;
+            var link = "../../BrowseItem/Details/" + item.itemID;
+            <div class="col-sm-10 col-lg-4 col-md-5">
+                <div class="card" style="width: 18rem;">
+                    <img src="@Url.Content(item.imgPath)" class="card-img-top" width="350" height="280" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.name</h5>
+                        <p class="card-text">@item.description</p>
+                        <a href=@link class="btn btn-info">Go to details</a>
+                        @Html.ActionLink("Add to Cart", "AddtoCart", new { id = item.itemID }, new { @class = "btn btn-warning" })
+                        <br /> <br />
+                        @Html.ActionLink("Add to Compare", "ComparingProducts", "Itemss", new { id = item.itemID }, new { @class = "btn btn-primary" })
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <hr />
+
+</div>
+<br />
+<div class="container">
+    @Html.PagedListPager(Model, page => Url.Action("HomeIndex", "BrowseItem", new { page, option = Request.QueryString["option"], search = Request.QueryString["search"] }), new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded })
+</div>
+
+@* @using PagedList.Mvc;
+    @using PagedList;
+    @model PagedList<Models.Item>
+    @{
+        ViewBag.Title = "HomeIndex";
+        Layout = "~/Views/Shared/_ItemLayout.cshtml";
+    }
+    @using (Html.BeginForm("HomeIndex", "BrowseItem", FormMethod.Get))
+    {
+        //the following are search options
+        <br />
+
+        <div class="container text-center">
+            <div class="row">
+                @Html.TextBox("search", null, new { @class = "form-control mr-sm-2" })
+
+                <input type="submit" class="btn btn-secondary my-2 my-sm-0" name="submit" value="Search" />
+                &nbsp;
+                @Html.DropDownList("Category", new SelectList(ViewBag.Categories), "Select category", new { @class = "btn btn-primary" })
+            </div>
+        </div>
+        <div>@ViewBag.Message</div>
+    }
+
+    <div class="container">
+        <hr />
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                var id = "itemname" + item.itemID;
+                var link = "../../BrowseItem/Details/" + item.itemID;
+                <div class="col-sm-10 col-lg-4 col-md-5">
+                    <div class="card" style="width: 18rem;">
+                        <img src="@Url.Content(item.imgPath)" class="card-img-top" width="350px" height="280px" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.name</h5>
+                            <p class="card-text">@item.description</p>
+                            <a href=@link class="btn btn-primary">Go to details</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <hr />
+
+    </div>
+    <br />
+    <div class="container">
+        @Html.PagedListPager(Model, page => Url.Action("HomeIndex", "BrowseItem", new { page, option = Request.QueryString["option"], search = Request.QueryString["search"] }), new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded })
+    </div>
+*@

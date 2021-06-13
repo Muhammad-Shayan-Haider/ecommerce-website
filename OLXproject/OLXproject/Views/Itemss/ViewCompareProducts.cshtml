@@ -1,0 +1,51 @@
+﻿@using Microsoft.AspNet.Identity
+@model IEnumerable<Models.Item>
+@{
+    ViewBag.Title = "ViewCompareProducts";
+    if (Request.IsAuthenticated && User.IsInRole("Admin"))
+    {
+        Layout = "~/Views/Shared/adminLayout.cshtml";
+    }
+    else if(Request.IsAuthenticated)
+    {
+        Layout = "~/Views/Shared/_ItemLayout.cshtml";
+    } else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}
+
+<h2>Compare The Products Of Your Liking</h2>
+
+<div class="container">
+    <div class="d-flex p-3">
+        @if (Session["CompareP"] == null)
+        {
+            <h1 class="text-danger">It's Lonely In Here!</h1>
+        }
+        else
+        {
+            foreach (var item in Model)
+            {
+                <div class="card col-md-4 col-sm-3">
+                    <img class="card-img-top" style="height: 250px; width: 100%; display: block;" src="@Url.Content(item.imgPath)" alt="Card image">
+                    <h3 class="card-header">@item.name</h3>
+                    <div class="card-body">
+                        <p class="card-text">Rs @item.price</p>
+                        <p class="card-text">@item.description</p>
+                        @if (@item.quantity > 0)
+                        {
+                            <p class="card-text">Item Available</p>
+                        }
+                        else
+                        {
+                            <p class="card-text text-danger"><b>Out Of Stock</b></p>
+                        }
+                        @Html.ActionLink("Remove", "RemoveCompareProduct", new { id = @item.itemID }, new { @class = "btn btn-danger" }) 
+                    </div>
+
+                </div>
+            }
+        }
+    </div>
+</div>

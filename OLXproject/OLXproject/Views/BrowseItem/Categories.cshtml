@@ -1,0 +1,29 @@
+﻿@model IEnumerable<string>
+@{
+    ViewBag.Title = "Categories";
+    if (Request.IsAuthenticated && User.IsInRole("Admin"))
+    {
+        Layout = "~/Views/Shared/adminLayout.cshtml";
+    }
+    else if(Request.IsAuthenticated)
+    {
+        Layout = "~/Views/Shared/_ItemLayout.cshtml";
+    } else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}
+
+<div class="container">
+    <h2>Categories</h2>
+    @foreach (var category in Model)
+    {
+        var id = "itemname" + category.ToString();
+        var link = "../../BrowseItem/viewItemsByCategory/" + category.ToString();
+        <a href=@link>
+            <div class="btn btn-block btn-primary">
+                <h4>@category.ToString()</h4>
+            </div>
+        </a>
+    }
+</div>

@@ -1,0 +1,52 @@
+﻿@using PagedList.Mvc;
+@using PagedList;
+@model PagedList<Models.Item>
+@{
+    if (Request.IsAuthenticated && User.IsInRole("Admin"))
+    {
+        Layout = "~/Views/Shared/adminLayout.cshtml";
+    }
+    else if (Request.IsAuthenticated)
+    {
+        Layout = "~/Views/Shared/_ItemLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}
+
+<h2>WishList</h2>
+
+<div class="container">
+    <hr />
+    <div class="row">
+        @foreach (var item in Model)
+        {
+
+            var id = "itemname" + item.itemID;
+            var link = "../../BrowseItem/Details/" + item.itemID;
+            var link1 = "../../BrowseItem/RemoveFromWishList/" + item.itemID;
+            <div class="col-sm-10 col-lg-4 col-md-5">
+                <div class="card" style="width: 18rem;">
+                    <img src="@Url.Content(item.imgPath)" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.name</h5>
+                        <p class="card-text">@item.description</p>
+                        <a href=@link class="btn btn-primary">Go to details</a>
+                        <br />
+                        
+                        @*<a id="wishlist" style="height:40px !important" class="btn btn-primary" href =@link>Remove from Wishlist</a>*@
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <hr />
+
+</div>
+<br />
+<div class="container">
+    @Html.PagedListPager(Model, page => Url.Action("wishList", "BrowseItem", new { page, option = Request.QueryString["option"], search = Request.QueryString["search"] }), new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded, LiElementClasses = new string[] { "page-item" } })
+</div>

@@ -1,0 +1,23 @@
+﻿
+@{
+    ViewBag.Title = "SecondHandSection";
+
+    if (Request.IsAuthenticated && User.IsInRole("Admin"))
+    {
+        Layout = "~/Views/Shared/adminLayout.cshtml";
+    }
+    else if (Request.IsAuthenticated)
+    {
+        Layout = "~/Views/Shared/_ItemLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}
+
+<h2>WELCOME</h2>
+<a href='@Url.Action("Index","SecondHandItems")' class="btn btn-primary" style="float: right; border: 1px red solid; height: 30px; width: 100px; margin: 3px; position: fixed; top: 200px; left: 100px; ">BUY</a>
+<a href='@Url.Action("PostItem","SecondHandItems")' class="btn btn-primary" style="float: right; border: 1px red solid; height: 30px; width: 100px; margin: 3px; position: fixed; top: 200px; right: 200px; ">SELL</a>
+
+
